@@ -11,31 +11,41 @@
 	        <view :class="['tab-item',(currentTab=='7'?'active':'')]" data-current="7" @click="swichNav">其他</view>
 	    </scroll-view>
 	    <swiper class="tab-content" :current="currentTab" duration="300" @change="switchTab" v-bind:style="{ height: winHeight+'rpx'}">
-	        <swiper-item v-for="(item,index) in numArr" :key="index">
-	            <scroll-view :scroll-y="true" class="scoll-h" >
-	                <block v-for="(item,i) in numArr" :key="i">
-	                    <view class="item-ans">
-	                        <view class="avatar">
-	                            <image class="img" src="http://ookzqad11.bkt.clouddn.com/avatar.png"></image>
-	                        </view>
-	                        <view class="expertInfo">
-	                            <view class="name">{{expertList[0].name}}</view>
-	                            <view class="tag">{{expertList[0].tag}}</view>
-	                            <view class="answerHistory">{{expertList[0].answer}}个回答，{{expertList[0].listen}}人听过 </view>
-	                        </view>
-	                        <navigator url="/pages/askExpert/expertDetail" class="askBtn">问TA</navigator> 
-	                    </view>
-	                </block>
-	            </scroll-view>
+	        <swiper-item v-for="(item,index) in numArr" :key="index" >
+				<block v-if="index != 7">
+		            <scroll-view :scroll-y="true" class="scoll-h" >
+		                <block v-for="(item,i) in numArr" :key="i">
+		                    <view class="item-ans">
+		                        <view class="avatar">
+		                            <image class="img" src="http://ookzqad11.bkt.clouddn.com/avatar.png"></image>
+		                        </view>
+		                        <view class="expertInfo">
+		                            <view class="name">{{expertList[0].name}}</view>
+		                            <view class="tag">{{expertList[0].tag}}</view>
+		                            <view class="answerHistory">{{expertList[0].answer}}个回答，{{expertList[0].listen}}人听过 </view>
+		                        </view>
+		                        <navigator url="/pages/askExpert/expertDetail" class="askBtn">问TA</navigator> 
+		                    </view>
+		                </block>
+		            </scroll-view>
+	            </block>
+	        </swiper-item>
+	        <swiper-item v-if="currentTab=='7'">
+	        	<view>
+	        		<mapVue></mapVue>
+	        		<!-- <getLocationByBaiDuMap></getLocationByBaiDuMap> -->
+	        	</view>
 	        </swiper-item>
 	    </swiper>
 	</view>
 </template>
 <script>
+	import mapVue from '../counter/index.vue' 
+	import getLocationByBaiDuMap from '../getLocation/getLocationByBaiDuMap.vue'
 	export default{
 		data(){
 			return {
-				numArr:[0,1,2,3,4,5,6,7],
+				numArr:[0,1,2,3,4,5,6],
 		        winHeight:"",//窗口高度
 		        currentTab:"0", //预设当前项的值
 		        scrollLeft:0, //tab标题的滚动条位置
@@ -83,6 +93,10 @@
 		         this.scrollLeft = 0
 		      }
 		    },
+		},
+		components:{
+			mapVue,
+			getLocationByBaiDuMap
 		}
 	}
 </script>

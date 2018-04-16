@@ -47,11 +47,11 @@ export default {
       isGetLocation:false,//是否获取到定位信息
     }
   },
-  mounted:function(){
+  mounted(){
     let _this = this;
     // 调用应用实例的方法获取全局数据
     wx.getLocation({
-      type: 'wgs84',
+      type: 'gcj02',
       success: function(res) {
         _this.latitude = res.latitude
         _this.longitude = res.longitude
@@ -60,20 +60,36 @@ export default {
         var accuracy = res.accuracy  
         _this.$set(_this.markers[0],'latitude',_this.latitude)
         _this.$set(_this.markers[0],'longitude',_this.longitude)
-        wx.openLocation({  
-          latitude: _this.latitude,  
-          longitude: _this.longitude,  
-          name:"12121212121",  
-          scale: 28  
-        })  
+        wx.request({
+          url: 'http://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+          data: {},
+          header: {
+            'Content-Type': 'application/json'
+          },
+          success: function (res) {
+            if(res.statusCode == 200){
+              console.log(res);
+              wx.openLocation({  
+                latitude: _this.latitude,  
+                longitude: _this.longitude,  
+                name:res.data.result.formatted_address, 
+                scale: 28  
+              }) 
+            }
+          },
+          fail: function () {
+            // fail
+          },
+        })
+
+         
       }
     })
   },
-  computed: {
-    
-  },
-  methods: {
-    
+  methods:{
+    renderReverse(){
+      return arguments[0]
+    }
   }
 }
 
