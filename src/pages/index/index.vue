@@ -1,25 +1,36 @@
 <template>
   <div class="container">
-    <view class="swiper-tab">
-        <view :class="['swiper-tab-item',(currentTab=='0'?'active':'')]" data-current="0" @click="clickTab">tabs1</view>
-        <view :class="['swiper-tab-item',(currentTab=='1'?'active':'')]" data-current="1" @click="clickTab">tabs2</view>
-        <view :class="['swiper-tab-item',(currentTab=='2'?'active':'')]" data-current="2" @click="clickTab">tabs3</view>
-    </view>
-    <swiper class="swiper" :current="currentTab" duration="300" @change="swiperTab">
-        <swiper-item ><view>tabs1</view></swiper-item>
-        <swiper-item><view>tabs2</view></swiper-item>
-        <swiper-item><view>tabs3</view></swiper-item>
-    </swiper>
+    <div class="container_top">
+      <div class="top_box1">
+        <span class="top_box1_left">
+          <img :src="locatIcon" height="36" width="32" alt="" class="locationIcon">
+        </span>
+        <span class="top_box1_right">{{localtionInfoName}}</span>
+      </div>
+      <div class='top_box2'>
+        <input type="text" value="4545454545">
+        <span class="search_box">
+          
+        </span>
+      </div>
+    </div>
+    <div class="container_center"></div>
+    <div class="container_bottom"></div>
   </div>
 </template>
 
 <script>
-
+import localtionIcon from '../../image/address.png';
+import searchIcon from '../../image/search.png'
 
 export default {
   data () {
     return {
-      currentTab:"0",
+      locatIcon:localtionIcon,
+      latitude: 39.92,
+      longitude: 116.46,
+      localtionInfoName:'正在获取位置',
+      isGetLocation:false,//是否获取到定位信息
     }
   },
 
@@ -28,24 +39,55 @@ export default {
   },
 
   methods: {
-    //滑动切换
-    swiperTab: function (e) {
-      var that = this;
-      this.currentTab = e.mp.detail.current
-    },
-    //点击切换
-    clickTab: function (e) {
-      if (this.currentTab === e.target.dataset.current) {
-        return false;
-      } else {
-        this.currentTab = e.target.dataset.current
-      }
+    renderReverse(){
+      return arguments[0]
     }
   },
   watch:{
   },
-  mounted:function(){
-    
+  mounted(){
+    let _this = this;
+    //  高度自适应
+    wx.getSystemInfo({  
+        success: function(res) {  
+          let clientHeight=res.windowHeight;
+          let clientWidth=res.windowWidth;
+          let rpxR=750/clientWidth;
+          let calc=clientHeight*rpxR-180;
+          _this.winHeight = calc ;
+        }  
+    });
+    // 打开页面进行获取位置
+    // 调用应用实例的方法获取全局数据
+    wx.getLocation({
+      type: 'gcj02',
+      success: function(res) {
+        _this.latitude = res.latitude
+        _this.longitude = res.longitude
+        _this.isGetLocation = true;
+        var speed = res.speed
+        var accuracy = res.accuracy  
+        wx.request({
+          url: 'http://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+          data: {},
+          header: {
+            'Content-Type': 'application/json'
+          },
+          success: function (res) {
+            if(res.statusCode == 200){
+              console.log(res);
+              _this.localtionInfoName = res.data.result.formatted_address
+            }else{
+               _this.localtionInfoName = '未能获取位置'
+            }
+          },
+          fail: function () {
+            // fail
+          },
+        })
+ 
+      }
+    })
   },
   created () {
 
@@ -57,61 +99,48 @@ export default {
 .container{
   padding:0rpx;
 }
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.container_top{
+  width:100%;
+  background-color:#008BFF;
 }
-
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+.top_box1{
+  height:84rpx;
+  padding:0rpx 40rpx;
 }
-
-.userinfo-nickname {
-  color: #aaa;
-}
-
-.usermotto {
-  margin-top: 150px;
-}
-
-.form-control {
-  display: block;
-  padding: 0 12px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-}
-
-.counter {
+.top_box1_left{
   display: inline-block;
-  margin: 10px auto;
-  padding: 5px 10px;
-  color: blue;
-  border: 1px solid blue;
+  height:84rpx;
+  line-height:84rpx;
 }
-.swiper-tab{
-    width: 100%;
-    border-bottom: 2rpx solid #ccc;
-    text-align: center;
-    height: 88rpx;
-    line-height: 88rpx;
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
+.locationIcon{
+  width:36rpx;
+  height:36rpx;
+  padding-right:10rpx;
 }
-.swiper-tab-item{
-    width: 30%; 
-    color:#434343;
+.top_box1_right{
+    max-width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 700;
+    color:#ffffff;
 }
-.active{
-    color:#F65959;
-    border-bottom: 4rpx solid #F65959;
+.top_box2{
+  position:relative;
+  height:84rpx;
+  padding:0rpx 40rpx;
 }
-.swiper{
-  text-align: center;
-  width: 100%;
+.top_box2 input{
+  height:60rpx;
+  background-color:#ffffff;
+  border-radius:1px;
+}
+.search_box{
+  position:absolute;
+  height:52rpx;
+  width:52rpx;
+  right:50rpx;
+  top:5rpx;
+  background-image:url('../../image/search.png');
 }
 </style>
