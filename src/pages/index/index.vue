@@ -5,12 +5,13 @@
         <span class="top_box1_left">
           <img :src="locatIcon" height="36" width="32" alt="" class="locationIcon">
         </span>
-        <span class="top_box1_right">{{localtionInfoName}}</span>
+        <span class="top_box1_right" @click="chooseLocation">{{localtionInfoName}}</span>
       </div>
       <div class='top_box2'>
-        <input type="text" value="4545454545">
+        <navigator url="../searchPage/searchPage">
+          <div></div>
+        </navigator>
         <span class="search_box">
-          
         </span>
       </div>
     </div>
@@ -21,8 +22,7 @@
 
 <script>
 import localtionIcon from '../../image/address.png';
-import searchIcon from '../../image/search.png'
-
+import searchIcon from '../../image/search.png' 
 export default {
   data () {
     return {
@@ -31,16 +31,53 @@ export default {
       longitude: 116.46,
       localtionInfoName:'正在获取位置',
       isGetLocation:false,//是否获取到定位信息
+      sugData:''
     }
   },
 
   components: {
-
   },
 
   methods: {
     renderReverse(){
       return arguments[0]
+    },
+    chooseLocation(){
+      let that = this;
+       wx.chooseLocation({
+          success: function(res){
+            // success
+            console.log(res);
+            that.latitude = res.latitude;
+            that.longitude = res.longitude;
+            that.localtionInfoName = res.name;
+           
+          },
+          fail: function() {
+            // fail
+          }
+        })
+    },
+    showLocationName(){
+      let _this = this;
+      wx.request({
+        url: 'http://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+        data: {},
+        header: {
+          'Content-Type': 'application/json'
+        },
+        success: function (res) {
+          if(res.statusCode == 200){
+            console.log(res);
+            _this.localtionInfoName = res.data.result.formatted_address
+          }else{
+             _this.localtionInfoName = '未能获取位置'
+          }
+        },
+        fail: function () {
+          // fail
+        },
+      })
     }
   },
   watch:{
@@ -67,24 +104,8 @@ export default {
         _this.isGetLocation = true;
         var speed = res.speed
         var accuracy = res.accuracy  
-        wx.request({
-          url: 'http://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
-          data: {},
-          header: {
-            'Content-Type': 'application/json'
-          },
-          success: function (res) {
-            if(res.statusCode == 200){
-              console.log(res);
-              _this.localtionInfoName = res.data.result.formatted_address
-            }else{
-               _this.localtionInfoName = '未能获取位置'
-            }
-          },
-          fail: function () {
-            // fail
-          },
-        })
+        // 调用获取位置地址的函数
+        _this.showLocationName();
  
       }
     })
@@ -130,7 +151,7 @@ export default {
   height:84rpx;
   padding:0rpx 40rpx;
 }
-.top_box2 input{
+.top_box2 div{
   height:60rpx;
   background-color:#ffffff;
   border-radius:1px;
