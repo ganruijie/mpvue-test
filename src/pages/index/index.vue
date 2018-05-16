@@ -8,9 +8,9 @@
         <span class="top_box1_right" @click="chooseLocation">{{localtionInfoName}}</span>
       </div>
       <div class='top_box2'>
-        <navigator url="../searchPage/searchPage">
+        <div @click='wxSearchTab'>
           <div>搜索地名</div>
-        </navigator>
+        </div>
         <span class="search_box">
         </span>
       </div>
@@ -72,6 +72,12 @@ export default {
   },
 
   methods: {
+    // 打开搜索窗口 
+    wxSearchTab() {
+      wx.redirectTo({
+        url: '../searchBox/searchBox'
+      })
+    },
     renderReverse(){
       return arguments[0]
     },
@@ -150,15 +156,24 @@ export default {
           if(res.statusCode == 200){
               _this.otherWeatherData = [];
               _this.weatherData = [];
-             _this.weatherData = res.data.results[0].weather_data[0];
-             if(res.data.results[0].weather_data){
-               res.data.results[0].weather_data.forEach((element,index) => {
-                 if(index !=0){
-                    _this.otherWeatherData.push(element)
-                 }
-               });
-             }
-            console.log(res,_this.weatherData)
+              console.log(res.data.results,'787878787')
+              if(res.data.results && res.data.results.length){
+                _this.weatherData = res.data.results[0]?res.data.results[0].weather_data[0]:[];
+                if(res.data.results[0].weather_data){
+                  res.data.results[0].weather_data.forEach((element,index) => {
+                    if(index !=0){
+                        _this.otherWeatherData.push(element)
+                    }
+                  });
+                }
+                console.log(res,_this.weatherData)
+            }else{
+               wx.showToast({
+                  title: '获取失败，请手动选择城市！',
+                  duration: 1000,
+                  mask:true
+              })
+            }
           }
         }
       })
@@ -190,15 +205,25 @@ export default {
         }
       });
       _this.dayOrNight();
-    }
+    },
   },
   watch:{
   },
   mounted(){
     let _this = this;
-    _this.init();
+    // _this.localtionName
+    console.log(getCurrentPages()[0].options.searchValue,'121212121')
+   if(getCurrentPages()[0].options.searchValue){
+      _this.localtionName = getCurrentPages()[0].options.searchValue;
+      _this.getWeather()
+      _this.localtionInfoName = _this.localtionName
+    }else{
+      _this.init();
+    }
+   
   },
   created () {
+    const _this = this;
 
   },
   onPullDownRefresh(){
