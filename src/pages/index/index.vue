@@ -9,7 +9,7 @@
       </div>
       <div class='top_box2'>
         <div @click='wxSearchTab'>
-          <div>搜索地名</div>
+          <input class="search-input" type="text" placeholder="搜索地名"/>
         </div>
         <span class="search_box">
         </span>
@@ -43,7 +43,6 @@
       </div>
     </div>
     <div class="container_center">
-
     </div>
     <div class="container_bottom"></div>
   </div>
@@ -156,7 +155,6 @@ export default {
           if(res.statusCode == 200){
               _this.otherWeatherData = [];
               _this.weatherData = [];
-              console.log(res.data.results,'787878787')
               if(res.data.results && res.data.results.length){
                 _this.weatherData = res.data.results[0]?res.data.results[0].weather_data[0]:[];
                 if(res.data.results[0].weather_data){
@@ -212,7 +210,6 @@ export default {
   mounted(){
     let _this = this;
     // _this.localtionName
-    console.log(getCurrentPages()[0].options.searchValue,'121212121')
    if(getCurrentPages()[0].options.searchValue){
       _this.localtionName = getCurrentPages()[0].options.searchValue;
       _this.getWeather()
@@ -238,6 +235,17 @@ export default {
 </script>
 
 <style scoped>
+input {
+  display:block;
+  height:48rpx;
+  text-overflow:clip;
+  overflow:hidden;
+  white-space:nowrap;
+  font-family:UICTFontTextStyleBody;
+  min-height:48rpx;
+  padding:6rpx;
+  text-align: center;
+}
 .container{
   padding:0rpx;
 }

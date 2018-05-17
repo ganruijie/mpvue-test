@@ -16,40 +16,36 @@
             </view>
         </view>
 
-        <view class="wxSearch" :style="{'display':'block',
-            'height':seachHeight+'px',
-            'top':barHeight+'px'
-        }">
-
+        <view class="wxSearch" :style="{'display':'block','height' : seachHeight+'px','top' : barHeight+'px'}">
             <view class="wxSearchInner">
                 <!-- 搜索提示部分 -->
                 <view class="wxSearchMindKey">
-                  <view class="wxSearchMindKeyList">
+                  <view class="wxSearchMindKeyList"  :style="searchKeyWord.length>0 ? 'display:block':'display:none'">
                       <block v-for="(item,index) in tipKeys" :key="index">
                       <view class="wxSearchMindKeyItem" @click="wxSearchKeyTap" :data-key="item">{{item}}</view>
                       </block>
                   </view>
-                  </view>
 
-                  <view v-if="histroyWord[0]" class="wxSearchHistory" :style="{'display':searchKeyWord.length>0 ? 'none':'block'}">
-                  <view class="wxSearchHistoryItem">
-                      <text class="wxSearchHistoryItemTitle">搜索记录</text>
-                      <icon type="clear" @click="wxSearchDeleteAll" size="18" />
+                  <view v-if="histroyWord[0]" class="wxSearchHistory" :style="searchKeyWord.length>0 ? 'display:none':'display:block'">
+                    <view class="wxSearchHistoryItem">
+                        <text class="wxSearchHistoryItemTitle">搜索记录</text>
+                        <icon type="clear" @click="wxSearchDeleteAll" size="18" />
+                    </view>
+                    <view class="wxSearchKeyList">
+                        <block v-for="(item,index) in histroyWord" :key="index">
+                        <view class="wxSearchKeyItem" @click="wxSearchKeyTap" :data-key="item">{{item}}</view>
+                        </block>
+                    </view>
                   </view>
+                </view>
+
+                <view class="wxSearchKey" :style="searchKeyWord.length>0 ? 'display:none':'display:block'">
+                  <text v-if="hotKeys[0]" class="wxSearchTitle">搜索热点</text>
                   <view class="wxSearchKeyList">
-                      <block v-for="(item,index) in histroyWord" :key="index">
+                      <block v-for="(item,index) in hotKeys" :key="index">
                       <view class="wxSearchKeyItem" @click="wxSearchKeyTap" :data-key="item">{{item}}</view>
                       </block>
                   </view>
-                </view>
-
-                <view class="wxSearchKey" :style="{'display':searchKeyWord.length>0 ? 'none':'block'}">
-                <text v-if="hotKeys[0]" class="wxSearchTitle">搜索热点</text>
-                <view class="wxSearchKeyList">
-                    <block v-for="(item,index) in hotKeys" :key="index">
-                    <view class="wxSearchKeyItem" @click="wxSearchKeyTap" :data-key="item">{{item}}</view>
-                    </block>
-                </view>
                 </view>
             </view>
         </view>
@@ -70,7 +66,8 @@ export default {
     },
     props:[],
     mounted () {
-        
+        const _this = this;
+        _this.init();
     },
     methods:{
         init(){
@@ -109,9 +106,11 @@ export default {
         },
         // 读取缓存
         getHisKeys() {
+          const _this = this;
           let value = [];
           try {
             value = wx.getStorageSync('wxSearchHisKeys')
+            console.log(value,'56565656565656')
             if (value) {
               _this.histroyWord = value;
             }
@@ -184,7 +183,7 @@ export default {
         // 搜索框输入时候操作
         wxSearchInput(e) {
           const _this = this;
-          let inputValue = e.detail.value;
+          let inputValue = e.target.value;
           // 寻找提示值 
           var tipKeys = [];
           if (inputValue && inputValue.length > 0) {
@@ -192,6 +191,7 @@ export default {
               _this.tipKeys.forEach(element=>{
                 if (element.indexOf(inputValue) != -1) {
                   tipKeys.push(element);
+                  console.log('1212121212',tipKeys)
                 }
               })
             }
@@ -213,7 +213,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 /** 整个区域 */
 .wxSearch{
   position: absolute;
