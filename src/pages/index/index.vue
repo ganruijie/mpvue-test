@@ -43,6 +43,7 @@
       </div>
     </div>
     <div class="container_center">
+      {{movies}}
     </div>
     <div class="container_bottom"></div>
   </div>
@@ -51,6 +52,7 @@
 <script>
 import localtionIcon from '../../image/address.png';
 import searchIcon from '../../image/search.png' 
+import { mapState,mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -69,8 +71,19 @@ export default {
 
   components: {
   },
-
+  computed: {
+    ...mapState('board', {
+      boards: state => state.boards,
+      movies: state => state.movies
+    })
+  },
   methods: {
+    ...mapActions('board',[
+      'getBoards'
+    ]),
+    async getBoardData(){
+      await this.getBoards()
+    },
     // 打开搜索窗口 
     wxSearchTab() {
       wx.redirectTo({
@@ -217,7 +230,7 @@ export default {
     }else{
       _this.init();
     }
-   
+    _this.getBoardData();
   },
   created () {
     const _this = this;

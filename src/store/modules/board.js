@@ -2,7 +2,7 @@ import {getBoardData} from '../../utils/api'
 import {BOARD_MOVIE_LIST} from '../mutations-type'
 
 const state = {
-        bosrds:[
+        boards:[
             {key:'top250'},
             {key:'us_box'},
             {key:'in_theaters'},
@@ -33,5 +33,7 @@ const actions = {
     }
 } 
 export default {
-    state,mutations,actions
+    state,
+    mutations,
+    actions
 }
