@@ -8,8 +8,8 @@
         <span class="top_box1_right" @click="chooseLocation">{{localtionInfoName}}</span>
       </div>
       <div class='top_box2'>
-        <div @click='wxSearchTab'>
-          <input class="search-input" type="text" placeholder="搜索地名"/>
+        <div @click="wxSearchTab">
+            <input class="search-input" type="text" placeholder="搜索地名"/>
         </div>
         <span class="search_box">
         </span>
@@ -43,7 +43,40 @@
       </div>
     </div>
     <div class="container_center">
-      {{movies}}
+      <view class="board-box-bottom board" :scroll-y="true">
+        <block v-for="(item,index) in boards" :key="index">
+          <view class="board-item moviesBox">
+            <navigator :url="'../list/list?type='+item.key+'&title='+item.title" hover-class="none">
+              <view class="title">
+                <text class="text">{{item.title}}</text>
+                <image src="../../../static/images/arrowright.png" mode="aspectFill"/>
+              </view>
+            </navigator>
+            <scroll-view class="content" :scroll-x="true">
+                <view v-if="item.key !== 'us_box'" class="inner">
+                  <block v-for="(movie,ind) in item.movies" :key="ind">
+                    <navigator :url="'../item/item?id=' + movie.id">
+                      <view class="movie-item">
+                        <image :src="movie.images.large" mode="aspectFill"></image>
+                        <text>{{movie.title}}</text>
+                      </view>
+                    </navigator>
+                  </block>
+                </view>
+                <view v-else class="inner">
+                  <block v-for="(movie,ind) in item.movies" :key="ind">
+                    <navigator :url="'../item/main?id=' + movie.id">
+                      <view class="movie-item">
+                        <image :src="movie.subject.images.large" mode="aspectFill"></image>
+                        <text>{{movie.subject.title}}</text>
+                      </view>
+                    </navigator>
+                  </block>
+                </view>
+            </scroll-view>
+          </view>
+        </block>
+      </view>
     </div>
     <div class="container_bottom"></div>
   </div>
@@ -81,8 +114,9 @@ export default {
     ...mapActions('board',[
       'getBoards'
     ]),
-    async getBoardData(){
-      await this.getBoards()
+    async getBoardData(localtionName){
+      let localName = localtionName
+      await this.getBoards(localName)
     },
     // 打开搜索窗口 
     wxSearchTab() {
@@ -145,7 +179,7 @@ export default {
             console.log(res);
             _this.localtionName = res.data.result.addressComponent.city;
             _this.localtionInfoName = res.data.result.formatted_address;
-             _this.getWeather();
+            _this.getWeather();
           }else{
              _this.localtionInfoName = '未能获取位置'
           }
@@ -177,7 +211,15 @@ export default {
                     }
                   });
                 }
-                console.log(res,_this.weatherData)
+                console.log(_this.localtionName,'_this.localtionName')
+                // 获取本地上映电影地点----北京、上海...不能是北京市、上海市，选择的地点中是北京市、上海市
+                if(_this.localtionName.substr(-1) == '市'){
+                  let localName = _this.localtionName.slice(0,-1)
+                  _this.getBoardData(localName);
+                }else{
+                  _this.getBoardData(_this.localtionName);
+                }
+                
             }else{
                wx.showToast({
                   title: '获取失败，请手动选择城市！',
@@ -230,7 +272,6 @@ export default {
     }else{
       _this.init();
     }
-    _this.getBoardData();
   },
   created () {
     const _this = this;
@@ -318,6 +359,12 @@ input {
   border: 2rpx solid #e1e1e1; 
   box-shadow: 4rpx 2rpx 12rpx #666666;
 }
+.moviesBox{
+  width:90.7%;
+  margin:10rpx;
+  border: 2rpx solid #e1e1e1; 
+  box-shadow: 4rpx 2rpx 12rpx #666666;
+}
 .weather-pic{
    display: inline-block;
     width:22%;
@@ -356,5 +403,75 @@ input {
 .weather-other .left img{
   width:100rpx;
   height: 100rpx;
+}
+.board-box-top swiper {
+  height: 480rpx;
+}
+
+.board-box-top swiper image {
+  height: 100%;
+  width: 100%;
+}
+.board {
+  box-sizing: border-box;
+  background-color: #f8f9fb;
+}
+
+.board-item {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  font-size: 20rpx;
+  /* margin: 40rpx 0; */
+  padding: 20rpx;
+  background-color: #fff;
+}
+
+.board-item .title {
+  display: flex;
+  margin-bottom: 10rpx;
+  width: 100%;
+}
+
+.board-item .title text {
+  flex: 1;
+}
+
+.board-item .title image {
+  height: 20rpx;
+  width: 20rpx;
+}
+
+.board-item .content {
+  height: 300rpx;
+}
+
+.board-item .content .inner {
+  display: flex;
+  flex-direction: row;
+  height: 300rpx;
+  width: 900rpx;
+}
+
+.board-item .content .inner .movie-item {
+  display: flex;
+  flex-direction: column;
+  width: 150rpx;
+  margin: 10rpx;
+}
+
+.board-item .content .inner .movie-item image {
+  width: 180rpx;
+  height: 250rpx;
+}
+
+.board-item .content .inner .movie-item text {
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.padding20{
+  padding: 20rpx;
 }
 </style>
