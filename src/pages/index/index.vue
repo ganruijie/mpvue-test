@@ -8,8 +8,8 @@
         <span class="top_box1_right" @click="chooseLocation">{{localtionInfoName}}</span>
       </div>
       <div class='top_box2'>
-        <div @click='wxSearchTab'>
-          <input class="search-input" type="text" placeholder="搜索地名"/>
+        <div @click="wxSearchTab">
+            <input class="search-input" type="text" placeholder="搜索地名"/>
         </div>
         <span class="search_box">
         </span>
@@ -46,7 +46,7 @@
       <view class="board-box-bottom board" :scroll-y="true">
         <block v-for="(item,index) in boards" :key="index">
           <view class="board-item moviesBox">
-            <navigator :url="'../list/main?type='+item.key+'&title='+item.title" hover-class="none">
+            <navigator :url="'../list/list?type='+item.key+'&title='+item.title" hover-class="none">
               <view class="title">
                 <text class="text">{{item.title}}</text>
                 <image src="../../../static/images/arrowright.png" mode="aspectFill"/>
@@ -55,7 +55,7 @@
             <scroll-view class="content" :scroll-x="true">
                 <view v-if="item.key !== 'us_box'" class="inner">
                   <block v-for="(movie,ind) in item.movies" :key="ind">
-                    <navigator :url="'../item/main?id=' + movie.id">
+                    <navigator :url="'../item/item?id=' + movie.id">
                       <view class="movie-item">
                         <image :src="movie.images.large" mode="aspectFill"></image>
                         <text>{{movie.title}}</text>
@@ -211,7 +211,7 @@ export default {
                     }
                   });
                 }
-                console.log(res,_this.weatherData)
+                console.log(_this.localtionName,'_this.localtionName')
                 // 获取本地上映电影地点----北京、上海...不能是北京市、上海市，选择的地点中是北京市、上海市
                 if(_this.localtionName.substr(-1) == '市'){
                   let localName = _this.localtionName.slice(0,-1)

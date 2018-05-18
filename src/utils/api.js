@@ -31,6 +31,7 @@ import request from './request'
  * 新片榜 -> new_movies（movie_advance_r）
  */
 export function getBoardData({board = 'top250',page = 1,count = 20,city = '北京',search = ''}={}){
+    console.log('6666666666')
     let params = {}
     if(board !== 'us_box'){
         params.start = (page-1)*count

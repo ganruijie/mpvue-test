@@ -110,7 +110,6 @@ export default {
           let value = [];
           try {
             value = wx.getStorageSync('wxSearchHisKeys')
-            console.log(value,'56565656565656')
             if (value) {
               _this.histroyWord = value;
             }
