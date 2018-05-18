@@ -6,7 +6,6 @@ const URI = 'https://api.douban.com/v2/movie'
 router.prefix('/douban')
 router.get(['/:type', '/:type/:id'], async ctx => {
   let result
-  console.log(ctx,'12121212121')
   try {
     let url = ctx.url.replace(/\/douban(\w*)/, URI + '$1')
     console.log(':::', url, ':::')
