@@ -4,7 +4,7 @@ import {BOARD_MOVIE_LIST} from '../mutations-type'
 const state = {
         boards:[
             {key:'top250'},
-            {key:'us_box'},
+            // {key:'us_box'},
             {key:'in_theaters'},
             {key:'coming_soon'}
         ],
@@ -24,9 +24,13 @@ const mutations = {
 }
 
 const actions = {
-    async getBoards ({state,commit}){
+    async getBoards ({state,commit},localName){
         const tasks = state.boards.map(board =>{
-            return getBoardData({board:board.key,page:1,count:8})
+            if(board.key === 'in_theaters'){
+                return getBoardData({board:board.key,page:1,count:10,city:localName})
+            }else{
+                return getBoardData({board:board.key,page:1,count:10,city:localName})
+            }
         })
         let boards = await Promise.all(tasks)
         commit(BOARD_MOVIE_LIST,{boards})

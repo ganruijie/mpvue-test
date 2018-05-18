@@ -40,7 +40,8 @@ module.exports = {
     alias: {
       'vue': 'mpvue',
       '@': resolve('src'),
-      'flyio': 'flyio/dist/npm/wx'
+      'flyio': 'flyio/dist/npm/wx',
+      'wx': resolve('src/utils/wx')
     },
     symlinks: false
   },
