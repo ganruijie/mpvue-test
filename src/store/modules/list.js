@@ -1,4 +1,4 @@
-import {getMovieData} from '../../utils/api'
+import {getBoardData} from '../../utils/api'
 import {LIST_MOVIE_LIST, LIST_CLEAR_STATE} from '../mutations-type'
 
 const state = {

@@ -4,14 +4,28 @@
     <block v-if="movie.title">
       <view class="meta">
         <image class="poster" :src="movie.images.large" mode="aspectFit"/>
-        <text class="title">{{ movie.title }}({{ movie.year }})</text>
-        <text class="info">评分：{{ movie.rating.average }}</text>
-        <text class="info">导演：<block v-for="director in movie.directors" :key="director.id"> {{ director.name }} </block></text>
-        <text class="info">主演：<block v-for="cast in movie.casts" :key="cast.id"> {{ cast.name }} </block></text>
+        <p class="title">{{ movie.title }}({{ movie.year }})</p>
+        <p class="info">评分：{{ movie.rating.average }}</p>
+        <p class="info">导演：
+          <block v-for="director in movie.directors" :key="director.id">
+            {{ director.name }} </block>
+          </p>
+        <p class="info">主演：
+          <block v-for="cast in movie.casts" :key="cast.id"> 
+            {{ cast.name }} </block>
+        </p>
+        <p class="info">类型：
+          <block v-for="(tag,x) in movie.genres" :key="x">
+            {{tag}}
+          </block>
+        </p>
+        <p v-if="movie.aka.length" class="info">别名：
+          <block v-for="(aka,y) in movie.aka" :key="y">{{y==movie.aka.length-1?aka:aka+'/'}}</block>
+        </p>
       </view>
       <view class="summary">
-        <text class="label">摘要：</text>
-        <text class="content">{{ movie.summary }}</text>
+        <p class="label">摘要：</p>
+        <p class="content">{{ movie.summary }}</p>
       </view>
     </block>
   </div>
@@ -91,13 +105,13 @@ export default {
 
 .summary {
   width: 80%;
-  margin: 30rpx auto;
+  margin: 0rpx auto;
 }
 
 .label {
   display: block;
   font-size: 30rpx;
-  margin-bottom: 30rpx;
+  margin-bottom: 10rpx;
 }
 
 .content {
@@ -117,5 +131,13 @@ export default {
   z-index: -1000;
   opacity: .1;
 }
-
+.movie-tag{
+  color: #f65858;
+  font-size: 22rpx;
+  border: 2rpx solid #f65858;
+  padding: 2rpx 6rpx;
+  display: inline-block;
+  border-radius: 10rpx;
+  margin-right: 10rpx;
+}
 </style>
