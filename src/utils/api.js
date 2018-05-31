@@ -1,4 +1,5 @@
 import request from './request'
+import wx from './wx'
 /**
  * 榜单：
  * Top 250：
@@ -31,7 +32,6 @@ import request from './request'
  * 新片榜 -> new_movies（movie_advance_r）
  */
 export function getBoardData({board = 'top250',page = 1,count = 20,city = '北京',search = ''}={}){
-    console.log('6666666666')
     let params = {}
     if(board !== 'us_box'){
         params.start = (page-1)*count
@@ -56,4 +56,30 @@ export function getBoardData({board = 'top250',page = 1,count = 20,city = '北�
 
 export function getMovieData(id){
 	return request.get(`/subject/${id}`)
+}
+
+export function getRankingList({type=0}={}){
+    var rangList=1212;
+    wx.request({
+        url: 'http://119.29.214.133:3000/top/list',
+        data: {
+            idx:type
+        },
+        header: {
+            'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+            if(res.statusCode == 200){
+                if(res.data.playlist.tracks){
+                    rangList = res.data.playlist.tracks;
+                }
+            }
+        },
+        fail: function (error) {
+            // fail
+            wx.showToast(error)
+          },
+    })
+    console.log(rangList,'aaaaaaaaaaaaaaaaaaaaaa')
+    return rangList;
 }

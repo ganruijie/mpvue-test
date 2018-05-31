@@ -76,6 +76,27 @@
             </scroll-view>
           </view>
         </block>
+        <!-- music -->
+        <view class="board-item moviesBox">
+          <navigator :url="'../list/list?type=&title='" hover-class="none">
+            <view class="title">
+              <text class="text"></text>
+              <image src="../../../static/images/arrowright.png" mode="aspectFill"/>
+            </view>
+          </navigator>
+          <scroll-view class="content" :scroll-x="true">
+              <view class="inner">
+                <block v-for="(item,ind) in music" :key="ind">
+                  <navigator :url="'../item/main?id='">
+                    <view class="movie-item">
+                      <image :src="item.al.picUrl" mode="aspectFill"></image>
+                      <text>{{item.ar[0].name}}-{{item.al.name}}</text>
+                    </view>
+                  </navigator>
+                </block>
+              </view>
+          </scroll-view>
+        </view>
       </view>
     </div>
     <div class="container_bottom"></div>
@@ -107,16 +128,19 @@ export default {
   computed: {
     ...mapState('board', {
       boards: state => state.boards,
-      movies: state => state.movies
+      movies: state => state.movies,
+      music:state => state.music.splice(0,8),
     })
   },
   methods: {
     ...mapActions('board',[
-      'getBoards'
+      'getBoards',
+      'getMusic'
     ]),
     async getBoardData(localtionName){
       let localName = localtionName
       await this.getBoards(localName)
+      await this.getMusic()
     },
     // 打开搜索窗口 
     wxSearchTab() {
@@ -143,7 +167,7 @@ export default {
             that.localtionInfoName = res.name;
             // 选择当前位置的cityname位置,和天气
             wx.request({
-              url: 'http://api.map.baidu.com/geocoder/v2/?callback='+that.renderReverse+'&location='+that.latitude+','+that.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+              url: 'https://api.map.baidu.com/geocoder/v2/?callback='+that.renderReverse+'&location='+that.latitude+','+that.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
               data: {},
               header: {
                 'Content-Type': 'application/json'
@@ -169,7 +193,7 @@ export default {
     showLocationName(){
       let _this = this;
       wx.request({
-        url: 'http://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+        url: 'https://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
         data: {},
         header: {
           'Content-Type': 'application/json'
@@ -193,7 +217,7 @@ export default {
     getWeather(){
       let _this = this;
       wx.request({
-        url:'http://api.map.baidu.com/telematics/v3/weather?location='+_this.localtionName+'&output=json&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+        url:'https://api.map.baidu.com/telematics/v3/weather?location='+_this.localtionName+'&output=json&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
         data:{},
         header: {
           'Content-Type': 'application/json'

@@ -1,5 +1,7 @@
-import {getBoardData} from '../../utils/api'
-import {BOARD_MOVIE_LIST} from '../mutations-type'
+import {getBoardData,getRankingList} from '../../utils/api'
+import {BOARD_MOVIE_LIST,LIST_MUSIC_LIST} from '../mutations-type'
+import {Ajax} from '../../utils/ajax'
+import wx from '../../utils/wx'
 
 const state = {
         boards:[
@@ -8,7 +10,14 @@ const state = {
             {key:'in_theaters'},
             {key:'coming_soon'}
         ],
-        movies:[]
+        rangs:[
+            {key:'云音乐新歌榜'},
+            {key:'云音乐热歌榜'},
+            {key:'美国Billboard周榜'},
+            {key:'香港电台中文歌曲龙虎榜'}
+        ],
+        movies:[],
+        music:[],
 }
 const mutations = {
     [BOARD_MOVIE_LIST](state,{boards}){
@@ -20,6 +29,18 @@ const mutations = {
             return board
         })
         state.movies = state.boards[0].movies
+    },
+    [LIST_MUSIC_LIST](state,{musicRang}){
+        let data;
+        state.boards = state.rangs.map((rang,i)=>{
+            data = musicRang[i]
+            // rang.title = data.title
+            // rang.music = data.subjects
+            console.log(data,rang,'4545454545')
+            return rang
+        })
+        state.music = music;
+        
     }
 }
 
@@ -34,6 +55,22 @@ const actions = {
         })
         let boards = await Promise.all(tasks)
         commit(BOARD_MOVIE_LIST,{boards})
+    },
+    async getMusic({state,commit}){
+        
+        const rangList =state.rangs.map(rang=>{
+            if(rang.key === '云音乐新歌榜'){
+                return getRankingList({type:0})
+            }else  if(rang.key === '云音乐热歌榜'){
+                return getRankingList({type:1})
+            }else if(rang.key === '美国Billboard周榜'){
+                return getRankingList({type:6})
+            }else if(rang.key === '香港电台中文歌曲龙虎榜'){
+                return getRankingList({type:16})
+            }
+        })
+        console.log(getRankingList({type:1}),'89898989')
+        commit(LIST_MUSIC_LIST,{rangList}) 
     }
 } 
 export default {

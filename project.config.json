@@ -7,9 +7,12 @@
 		"minified": true,
 		"newFeature": true
 	},
+	"client": "./client",
+	"svr": "./server",
+	"qcloudRoot": "./server",
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "touristappid",
+	"appid": "wxc7edb46618cc70d3",
 	"projectname": "mpvue",
 	"condition": {
 		"search": {
