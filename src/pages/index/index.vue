@@ -78,7 +78,7 @@
         </block>
         <!-- music -->
         <view class="board-item moviesBox">
-          <navigator :url="'../list/list?type=&title='" hover-class="none">
+          <navigator :url="'../provincesLinkage/provincesLinkage'" hover-class="none">
             <view class="title">
               <text class="text"></text>
               <image src="../../../static/images/arrowright.png" mode="aspectFill"/>
@@ -99,7 +99,11 @@
         </view>
       </view>
     </div>
-    <div class="container_bottom"></div>
+    <div class="container_bottom">
+      <view @click="provincesLink" style="width:100%;height:80rpx;background-color:red;">
+        
+      </view>  
+    </div>
   </div>
 </template>
 
@@ -146,6 +150,21 @@ export default {
     wxSearchTab() {
       wx.redirectTo({
         url: '../searchBox/searchBox'
+      })
+    },
+    // 打开省市联动
+    provincesLink(){
+      wx.navigateTo({
+        url: '../provincesLinkage/provincesLinkage',//页面跳转相对路径要写清楚且准确
+        success: function(res){
+          console.log('跳转到news页面成功')// success
+        },
+        fail: function() {
+        console.log('跳转到news页面失败')  // fail
+        },
+        complete: function() {
+          console.log('跳转到news页面完成') // complete
+        }
       })
     },
     renderReverse(){
@@ -497,5 +516,8 @@ input {
 }
 .padding20{
   padding: 20rpx;
+}
+.container_bottom{
+  width: 100%;
 }
 </style>
