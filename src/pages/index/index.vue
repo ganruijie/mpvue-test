@@ -17,19 +17,21 @@
     </div>
     <div class="container_center">
       <div class="weather-box">
-        <div class="weather-pic">
-          <img :src="weatherData.dayPictureUrl" alt="" width="50" height="50" v-if="dayOrnight">
-            <img :src="weatherData.nightPictureUrl" alt="" width="50" height="50" v-else>
-        </div>
-        <div class="weather-address">
-          <p>{{localtionName}}</p>
-          <p>{{weatherData.weather}}</p>
-          <p>{{weatherData.wind}}</p>
-        </div>
-        <div class="weather-num">
-          <p>{{weatherData.date}}</p>
-          <p>{{weatherData.temperature}}</p>
-        </div>
+         <navigator :url="'../weatherDail/weatherDail?'+'localtionName='+localtionName" hover-class="none">
+          <div class="weather-pic">
+            <img :src="weatherData.dayPictureUrl" alt="" width="50" height="50" v-if="dayOrnight">
+              <img :src="weatherData.nightPictureUrl" alt="" width="50" height="50" v-else>
+          </div>
+          <div class="weather-address">
+            <p>{{localtionName}}</p>
+            <p>{{weatherData.weather}}</p>
+            <p>{{weatherData.wind}}</p>
+          </div>
+          <div class="weather-num">
+            <p>{{weatherData.date}}</p>
+            <p>{{weatherData.temperature}}</p>
+          </div>
+        </navigator>
       </div>
       <div class="weather-other">
           <div class="left" v-for="(item,index) in otherWeatherData" :key="index">
@@ -143,7 +145,7 @@ export default {
             that.localtionInfoName = res.name;
             // 选择当前位置的cityname位置,和天气
             wx.request({
-              url: 'http://api.map.baidu.com/geocoder/v2/?callback='+that.renderReverse+'&location='+that.latitude+','+that.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+              url: 'https://api.map.baidu.com/geocoder/v2/?callback='+that.renderReverse+'&location='+that.latitude+','+that.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
               data: {},
               header: {
                 'Content-Type': 'application/json'
@@ -169,7 +171,7 @@ export default {
     showLocationName(){
       let _this = this;
       wx.request({
-        url: 'http://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+        url: 'https://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
         data: {},
         header: {
           'Content-Type': 'application/json'
@@ -193,7 +195,7 @@ export default {
     getWeather(){
       let _this = this;
       wx.request({
-        url:'http://api.map.baidu.com/telematics/v3/weather?location='+_this.localtionName+'&output=json&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+        url:'https://api.map.baidu.com/telematics/v3/weather?location='+_this.localtionName+'&output=json&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
         data:{},
         header: {
           'Content-Type': 'application/json'
