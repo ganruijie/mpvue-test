@@ -78,9 +78,34 @@
             </scroll-view>
           </view>
         </block>
+        <!-- music -->
+        <view class="board-item moviesBox">
+          <navigator :url="'../provincesLinkage/provincesLinkage'" hover-class="none">
+            <view class="title">
+              <text class="text"></text>
+              <image src="../../../static/images/arrowright.png" mode="aspectFill"/>
+            </view>
+          </navigator>
+          <scroll-view class="content" :scroll-x="true">
+              <view class="inner">
+                <block v-for="(item,ind) in music" :key="ind">
+                  <navigator :url="'../item/main?id='">
+                    <view class="movie-item">
+                      <image :src="item.al.picUrl" mode="aspectFill"></image>
+                      <text>{{item.ar[0].name}}-{{item.al.name}}</text>
+                    </view>
+                  </navigator>
+                </block>
+              </view>
+          </scroll-view>
+        </view>
       </view>
     </div>
-    <div class="container_bottom"></div>
+    <div class="container_bottom">
+      <view @click="provincesLink" style="width:100%;height:80rpx;background-color:red;">
+        
+      </view>  
+    </div>
   </div>
 </template>
 
@@ -109,21 +134,39 @@ export default {
   computed: {
     ...mapState('board', {
       boards: state => state.boards,
-      movies: state => state.movies
+      movies: state => state.movies,
+      music:state => state.music.splice(0,8),
     })
   },
   methods: {
     ...mapActions('board',[
-      'getBoards'
+      'getBoards',
+      'getMusic'
     ]),
     async getBoardData(localtionName){
       let localName = localtionName
       await this.getBoards(localName)
+      await this.getMusic()
     },
     // 打开搜索窗口 
     wxSearchTab() {
       wx.redirectTo({
         url: '../searchBox/searchBox'
+      })
+    },
+    // 打开省市联动
+    provincesLink(){
+      wx.navigateTo({
+        url: '../provincesLinkage/provincesLinkage',//页面跳转相对路径要写清楚且准确
+        success: function(res){
+          console.log('跳转到news页面成功')// success
+        },
+        fail: function() {
+        console.log('跳转到news页面失败')  // fail
+        },
+        complete: function() {
+          console.log('跳转到news页面完成') // complete
+        }
       })
     },
     renderReverse(){
@@ -475,5 +518,8 @@ input {
 }
 .padding20{
   padding: 20rpx;
+}
+.container_bottom{
+  width: 100%;
 }
 </style>

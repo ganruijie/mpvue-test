@@ -61,7 +61,7 @@ export default {
         _this.$set(_this.markers[0],'latitude',_this.latitude)
         _this.$set(_this.markers[0],'longitude',_this.longitude)
         wx.request({
-          url: 'http://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
+          url: 'https://api.map.baidu.com/geocoder/v2/?callback='+_this.renderReverse+'&location='+_this.latitude+','+_this.longitude+'&output=json&pois=1&ak=UvS50GKvzIfsk1cdUxhQIuFXHhqYAkMs',
           data: {},
           header: {
             'Content-Type': 'application/json'
