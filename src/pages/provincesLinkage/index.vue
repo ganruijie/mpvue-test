@@ -8,8 +8,8 @@
         <view class="citypicker">
             <picker-view indicator-style="height: 50px;" style="width: 100%; height: 300px;" :value="value" @change="bindChange" class="citybody">
                 <view class="cityheader">
-                    <view @click="open" class="city-cancel">取消</view>
-                    <view @click="open" class="city-true">确定</view>
+                    <view @click="goBack" class="city-cancel">取消</view>
+                    <view @click="goBack" class="city-true">确定</view>
                 </view>
                 <picker-view-column>
                     <view v-for="(item,index) in provinces" :key="index" style="line-height: 50px;padding-left:10px;">{{item}}</view>
@@ -137,6 +137,11 @@ export default {
             let _this = this;
             _this.condition = !_this.condition
         },
+        goBack(){
+            wx.redirectTo({
+            url: '../index/index'  
+          })
+        }
     }
 }
 </script>
